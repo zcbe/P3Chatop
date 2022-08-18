@@ -3,6 +3,18 @@ import { CommonModule } from '@angular/common';
 import { AuthRoutingModule } from './auth-routing.module';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+const materialModules = [
+  MatButtonModule,
+  MatCardModule,
+  MatFormFieldModule,
+  MatInputModule
+]
 
 @NgModule({
   declarations: [
@@ -10,8 +22,10 @@ import { LoginComponent } from './components/login/login.component';
     LoginComponent
   ],
   imports: [
+    AuthRoutingModule,
     CommonModule,
-    AuthRoutingModule
+    FlexLayoutModule,
+    ...materialModules
   ]
 })
 export class AuthModule { }

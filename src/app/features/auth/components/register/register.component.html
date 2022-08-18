@@ -1,1 +1,21 @@
-<p>register works!</p>
+<div class="register" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card>
+        <mat-card-header fxLayoutAlign="center center" >
+            <mat-card-title>Register</mat-card-title>
+        </mat-card-header>
+        <form class="register-form">
+            <mat-card-content fxLayout="column">
+                <mat-form-field fxFlex>
+                    <input matInput placeholder="Name">
+                </mat-form-field>
+                <mat-form-field fxFlex>
+                    <input matInput placeholder="Email">
+                </mat-form-field>
+                <mat-form-field fxFlex>
+                    <input matInput placeholder="Password">
+                </mat-form-field>
+            </mat-card-content>
+            <button mat-raised-button color="primary">Submit</button>
+        </form>
+    </mat-card>
+</div>

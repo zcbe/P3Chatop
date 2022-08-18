@@ -9,6 +9,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { HttpClientModule } from '@angular/common/http';
 
 const materialModule = [
   MatButtonModule,
@@ -26,6 +27,7 @@ const materialModule = [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     ...materialModule
   ],
   providers: [],
