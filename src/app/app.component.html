@@ -1,8 +1,19 @@
 <div class="app">
-  <mat-toolbar>
-   <span>Rental app</span>
- </mat-toolbar>
- <div class="app-container">
-  <router-outlet></router-outlet>
- </div>
+  <mat-toolbar class="app-nav">
+    <span>Rental app</span>
+    <div *ngIf="$isLogged() | async; else notLogged">
+      <a routerLink="rentals" class="link">Rentals</a>
+      <a routerLink="me" class="link">Account</a>
+      <a (click)="logout()" class="link">Logout</a>
+    </div>
+    <ng-template #notLogged>
+      <div>
+        <a routerLink="login" class="link">Login</a>
+        <a routerLink="register" class="link">Register</a>
+      </div>
+    </ng-template>
+  </mat-toolbar>
+  <div class="app-container">
+    <router-outlet></router-outlet>
+  </div>
 </div>

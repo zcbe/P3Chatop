@@ -1,17 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { SessionService } from 'src/app/services/session.service';
 import { AuthService } from '../../services/auth.service';
+import { RegisterRequest } from '../../interfaces/registerRequest.interface';
+import { AuthSuccess } from '../../interfaces/authSuccess.interface';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
 
-  constructor(private authService: AuthService) { }
+  public onError = false;
 
-  public ngOnInit(): void {
-    this.authService.register({login: 'test@test.com', password: 'test!31'}).subscribe(s => console.log(s));
+  public form = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    name: ['', [Validators.required, Validators.min(3)]],
+    password: ['', [Validators.required, Validators.min(3)]]
+  });
+
+  constructor(private authService: AuthService,
+    private fb: FormBuilder,
+    private router: Router,
+    private sessionService: SessionService) { }
+
+  public submit(): void {
+    const registerRequest = this.form.value as RegisterRequest;
+    this.authService.register(registerRequest).subscribe(
+      (response: AuthSuccess) => {
+        localStorage.setItem('token', response.token);
+        this.sessionService.logIn();
+        this.router.navigate(['/rentals'])
+      },
+      error => this.onError = true
+    );
   }
 
 }

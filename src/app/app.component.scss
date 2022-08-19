@@ -1,5 +1,14 @@
 .app {
-    &-container {
-        min-height: calc(100vh - 64px);
+    &-nav {
+        display: flex;
+        justify-content: space-between;
+        .link {
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .link + .link {
+            margin-left: 10px;
+        }
     }
 }

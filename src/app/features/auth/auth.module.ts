@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const materialModules = [
   MatButtonModule,
@@ -25,6 +26,8 @@ const materialModules = [
     AuthRoutingModule,
     CommonModule,
     FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
     ...materialModules
   ]
 })
