@@ -1,11 +1,9 @@
-import { Picture } from "./picture.interface";
-
 export interface Rental {
 	id: number,
 	name: string,
 	surface: number,
 	price: number,
-	pictures: Picture[],
+	pictures: string[],
 	description: string,
 	categorie_id: number,
 	owner_id: number,

@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class SessionService {
 
-  private isLogged = false;
+  private isLogged = true;
 
   private isLoggedSubject = new BehaviorSubject<boolean>(this.isLogged);
 
@@ -20,6 +20,7 @@ export class SessionService {
   }
 
   public logOut(): void {
+    localStorage.removeItem('token');
     this.isLogged = false;
     this.next();
   }

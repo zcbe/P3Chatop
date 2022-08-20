@@ -3,8 +3,12 @@
         display: flex;
         justify-content: space-between;
         .link {
+            cursor: pointer;
             font-size: 16px;
             text-decoration: none;
+            &:hover {
+                color: blue;
+            }
         }
 
         .link + .link {

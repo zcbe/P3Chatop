@@ -3,6 +3,10 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+h1 {
+    margin: 0 !important;
+}
+
 .error {
     color: red;
 }

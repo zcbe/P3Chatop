@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Rental } from 'src/app/interfaces/rental.interface';
+import { RentalsService } from '../../services/rentals.service';
 
 @Component({
   selector: 'app-detail',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetailComponent implements OnInit {
 
-  constructor() { }
+  public rental: Rental | undefined;
+
+  constructor(private rentalsService: RentalsService) { }
 
   ngOnInit(): void {
+    this.rentalsService
+      .detail('2')
+      .subscribe((rental: Rental) => this.rental = rental);
   }
 
 }

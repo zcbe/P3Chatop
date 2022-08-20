@@ -1,1 +1,32 @@
-<p>detail works!</p>
+<div class="detail">
+    <mat-card>
+        <mat-card-title>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <h1>Rental detail</h1>
+                <button mat-icon-button color="warn">
+                    <mat-icon>favorite</mat-icon>
+                </button>
+            </div>
+        </mat-card-title>
+        <mat-card-content *ngIf="rental">
+            <h2>{{rental.name}}</h2>
+            <div class="size" fxLayout="center">
+                <mat-icon>
+                    straighten
+                </mat-icon>
+                {{ rental.surface}} m2
+            </div>
+            <div class="price" fxLayout="center">
+                <mat-icon>
+                    nights_stay
+                </mat-icon>
+                {{ rental.price | currency:'EUR':'symbol':'.2-2'}} / by night
+            </div>
+            <div class="created"><i>Create the </i> {{ rental.created_at| date: 'longDate'}}</div>
+            <div class="updated"><i>Last update </i> {{ rental.updated_at| date: 'longDate'}}</div>
+            <div class="description">{{ rental.description }}</div>
+
+            {{ rental | json }}
+        </mat-card-content>
+    </mat-card>
+</div>
