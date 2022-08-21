@@ -10,14 +10,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FavoriteComponent } from './components/favorite/favorite.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 registerLocaleData(localeFr);
 
 const materialModules = [
   MatButtonModule,
   MatCardModule,
-  MatIconModule
+  MatIconModule,
+  MatSnackBarModule
 ];
 
 @NgModule({
@@ -31,6 +34,8 @@ const materialModules = [
   imports: [
     CommonModule,
     FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
     RentalRoutingModule,
     ...materialModules
   ],

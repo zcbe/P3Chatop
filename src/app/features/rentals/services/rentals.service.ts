@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Rental } from 'src/app/interfaces/rental.interface';
+import { Rental } from 'src/app/features/rentals/interfaces/rental.interface';
  
 
 @Injectable({

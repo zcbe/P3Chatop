@@ -1,8 +1,8 @@
 <div class="list">
     <mat-card>
         <mat-card-title>Rentals available</mat-card-title>
-        <div class="items">
-            <mat-card class="item" *ngFor="let i of [1,2,3]">
+        <div class="items mt2" fxLayout="row" fxLayout.lt-md="column">
+            <mat-card class="item" *ngFor="let i of [1,2,3]" fxFlex>
                 <mat-card-header>
                     <div mat-card-avatar class="avatar"></div>
                     <mat-card-title>Shiba Inu</mat-card-title>
@@ -17,7 +17,7 @@
                         bred for hunting.
                     </p>
                 </mat-card-content>
-                <mat-card-actions>
+                <mat-card-actions fxLayout="row" fxLayoutAlign="space-between center">
                     <button mat-raised-button color="primary" routerLink="/rentals/detail/1">DETAIL</button>
                     <button mat-icon-button color="warn">
                         <mat-icon>favorite</mat-icon>

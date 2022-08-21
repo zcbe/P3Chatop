@@ -5,6 +5,7 @@ import { SessionService } from 'src/app/services/session.service';
 import { AuthService } from '../../services/auth.service';
 import { RegisterRequest } from '../../interfaces/registerRequest.interface';
 import { AuthSuccess } from '../../interfaces/authSuccess.interface';
+import { User } from 'src/app/interfaces/user.interface';
 
 @Component({
   selector: 'app-register',
@@ -31,8 +32,10 @@ export class RegisterComponent {
     this.authService.register(registerRequest).subscribe(
       (response: AuthSuccess) => {
         localStorage.setItem('token', response.token);
-        this.sessionService.logIn();
-        this.router.navigate(['/rentals'])
+        this.authService.me().subscribe((user: User) => {
+          this.sessionService.logIn(user);
+          this.router.navigate(['/rentals'])
+        });
       },
       error => this.onError = true
     );
