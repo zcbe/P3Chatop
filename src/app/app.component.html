@@ -1,8 +1,7 @@
 <div class="app">
-  <mat-toolbar class="app-nav">
+  <mat-toolbar color="primary" fxLayout="row" fxLayoutAlign="space-between center">
     <span>Rental app</span>
     <div *ngIf="$isLogged() | async; else notLogged">
-      <span routerLink="rentals/favorites" class="link">Favorites</span>
       <span routerLink="rentals" class="link">Rentals</span>
       <span routerLink="me" class="link">Account</span>
       <span (click)="logout()" class="link">Logout</span>
@@ -14,7 +13,7 @@
       </div>
     </ng-template>
   </mat-toolbar>
-  <div class="app-container">
+  <div>
     <router-outlet></router-outlet>
   </div>
 </div>

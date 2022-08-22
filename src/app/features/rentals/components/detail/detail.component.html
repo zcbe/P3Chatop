@@ -8,10 +8,10 @@
                     </button>
                     <h1>{{rental.name | titlecase}}</h1>
                 </div>
-                <button mat-icon-button color="warn">
-                    <mat-icon>favorite</mat-icon>
-                </button>
             </div>
+            <mat-card-subtitle class="owner">
+                <app-owner-info [ownerId]="rental.owner_id"></app-owner-info>
+            </mat-card-subtitle>
         </mat-card-title>
         <mat-card-content>
             <div fxLayout="column" fxLayoutAlign="start center">

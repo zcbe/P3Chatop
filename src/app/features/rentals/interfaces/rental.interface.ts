@@ -5,7 +5,6 @@ export interface Rental {
 	price: number,
 	picture: string,
 	description: string,
-	categorie_id: number,
 	owner_id: number,
 	created_at: Date,
 	updated_at: Date

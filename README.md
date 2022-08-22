@@ -2,26 +2,54 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.0.
 
-## Development server
+## Start the project
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Git clone:
 
-## Code scaffolding
+> git clone https://github.com/OpenClassrooms-Student-Center/P3-Full-Stack-portail-locataire
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Go inside folder:
 
-## Build
+> cd estate
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Install dependencies:
 
-## Running unit tests
+> npm install
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Launch Front-end:
 
-## Running end-to-end tests
+> npm run start;
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Further help
+## Ressources
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Mockoon env
+
+Download Mockoon here: https://mockoon.com/download/
+
+After installing you could load the environement
+
+> ressources/mockoon/rental-oc.json` 
+
+directly inside Mockoon 
+
+> File > Open environmement
+
+For launching the Mockoon server click on play bouton
+
+Mockoon documentation: https://mockoon.com/docs/latest/about/
+
+### Postman collection
+
+For Postman import the collection
+
+> ressources/postman/rental.postman_collection.json 
+
+by following the documentation: 
+
+https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman
+
+
+### MySQL
+
+SQL script for creating the schema is available `ressources/sql/script.sql`

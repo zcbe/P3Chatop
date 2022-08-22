@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MessageRequest } from '../interfaces/messageRequest.interface';
-import { MessageResponse } from '../interfaces/messageResponse.interface';
+import { MessageRequest } from '../interfaces/api/messageRequest.interface';
+import { MessageResponse } from '../interfaces/api/messageResponse.interface';
 
 @Injectable({
   providedIn: 'root'

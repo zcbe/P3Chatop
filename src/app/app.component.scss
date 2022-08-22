@@ -1,18 +1,11 @@
 .app {
-    &-nav {
-        display: flex;
-        justify-content: space-between;
-        .link {
-            cursor: pointer;
-            font-size: 16px;
-            text-decoration: none;
-            &:hover {
-                color: blue;
-            }
-        }
+    .link {
+        cursor: pointer;
+        font-size: 16px;
+        text-decoration: none;
+    }
 
-        .link + .link {
-            margin-left: 10px;
-        }
+    .link + .link {
+        margin-left: 10px;
     }
 }

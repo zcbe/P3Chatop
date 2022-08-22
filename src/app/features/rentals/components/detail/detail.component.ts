@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
 import { Rental } from 'src/app/features/rentals/interfaces/rental.interface';
 import { SessionService } from 'src/app/services/session.service';
-import { MessageRequest } from '../../interfaces/messageRequest.interface';
-import { MessageResponse } from '../../interfaces/messageResponse.interface';
+import { MessageRequest } from '../../interfaces/api/messageRequest.interface';
+import { MessageResponse } from '../../interfaces/api/messageResponse.interface';
 import { MessagesService } from '../../services/messages.service';
 import { RentalsService } from '../../services/rentals.service';
 
@@ -18,7 +19,9 @@ export class DetailComponent implements OnInit {
   public messageForm!: FormGroup;
   public rental: Rental | undefined;
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
     private messagesService: MessagesService,
     private rentalsService: RentalsService,
     private sessionService: SessionService,
@@ -27,8 +30,10 @@ export class DetailComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id')!
+
     this.rentalsService
-      .detail('2')
+      .detail(id)
       .subscribe((rental: Rental) => this.rental = rental);
   }
 
@@ -38,7 +43,7 @@ export class DetailComponent implements OnInit {
 
   public sendMessage(): void {
     const message = {
-      owner_id: this.rental!.owner_id,
+      rental_id: this.rental!.id,
       user_id: this.sessionService.user?.id,
       message: this.messageForm.value.message
     } as MessageRequest;

@@ -1,26 +1,35 @@
 <div class="list">
     <mat-card>
-        <mat-card-title>Rentals available</mat-card-title>
+        <mat-card-header fxLayout="row" fxLayoutAlign="space-between center">
+            <mat-card-title class="m0">Rentals available</mat-card-title>
+            <button mat-raised-button color="primary" routerLink="create">
+                <mat-icon>add</mat-icon>
+                <span class="ml1">Create</span>
+            </button>
+        </mat-card-header>
         <div class="items mt2" fxLayout="row" fxLayout.lt-md="column">
-            <mat-card class="item" *ngFor="let i of [1,2,3]" fxFlex>
+            <mat-card class="item" *ngFor="let rental of (rentals$ | async)?.rentals" fxFlex>
                 <mat-card-header>
-                    <div mat-card-avatar class="avatar"></div>
-                    <mat-card-title>Shiba Inu</mat-card-title>
-                    <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+                    <mat-card-title>{{ rental.name }}</mat-card-title>
+                    <mat-card-subtitle>
+                        <app-owner-info [ownerId]="rental.owner_id"></app-owner-info>
+                    </mat-card-subtitle>
                 </mat-card-header>
-                <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-                    alt="Photo of a Shiba Inu">
+                <img mat-card-image [src]="rental.picture" alt="Rental picture">
                 <mat-card-content>
                     <p>
-                        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-                        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-                        bred for hunting.
+                        {{ rental.description }}
                     </p>
                 </mat-card-content>
-                <mat-card-actions fxLayout="row" fxLayoutAlign="space-between center">
-                    <button mat-raised-button color="primary" routerLink="/rentals/detail/1">DETAIL</button>
-                    <button mat-icon-button color="warn">
-                        <mat-icon>favorite</mat-icon>
+                <mat-card-actions>
+                    <button mat-raised-button color="primary" [routerLink]="['detail',rental.id]">
+                        <mat-icon>search</mat-icon>
+                        <span class="ml1">Detail</span>
+                    </button>
+                    <button *ngIf="rental.owner_id === user?.id" mat-raised-button color="primary"
+                        [routerLink]="['update',rental.id]">
+                        <mat-icon>edit</mat-icon>
+                        <span class="ml1">Edit</span>
                     </button>
                 </mat-card-actions>
             </mat-card>

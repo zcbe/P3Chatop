@@ -1,5 +1,5 @@
 export interface MessageRequest {
-    owner_id: number,
+    rental_id: number,
     user_id: number,
     message: string
 }
