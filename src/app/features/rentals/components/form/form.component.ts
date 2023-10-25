@@ -66,7 +66,7 @@ export class FormComponent implements OnInit {
   private initForm(rental?: Rental): void {
     console.log(rental);
     console.log(this.sessionService.user!.id);
-    if(rental?.owner_id !== this.sessionService.user!.id) {
+    if( (rental !== undefined) && (rental?.owner_id !== this.sessionService.user!.id)) {
       this.router.navigate(['/rentals']);
     }
     this.rentalForm = this.fb.group({
