@@ -2,6 +2,7 @@ package com.zcbe.chatop.configuration;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -16,14 +17,13 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.modelmapper.ModelMapper;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
-    private final String jwtKey = "Dq5nVat0zKaQyymX7C2ri1CBCpEfMdcp/xZ5n7coa9Y=";
+    private final String jwtKey = "29ea3bbd2b985a0ce37620054848c6a6b3b7cd2d3f583013d8e4ba6b744c53fc";
 
     @Bean
     public JwtDecoder jwtDecoder() {
