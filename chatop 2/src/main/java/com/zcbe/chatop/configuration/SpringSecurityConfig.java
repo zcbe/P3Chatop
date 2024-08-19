@@ -43,6 +43,9 @@ public class SpringSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/resources/**",
+                                "/static/**",
+                                "/images/**",
                                 "/auth/**",
                                 "/auth/register",
                                 "/auth/login",
