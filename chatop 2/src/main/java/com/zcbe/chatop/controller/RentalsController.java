@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -44,19 +43,26 @@ public class RentalsController {
     }
 
     @PostMapping("/rentals")
-    public ResponseEntity<RentalsModel> createRental(@RequestParam("name") String name,
-                                                     @RequestParam("surface") Long surface,
-                                                     @RequestParam("price") Long price,
-                                                     @RequestPart("picture") MultipartFile picture,
-                                                     @RequestParam("description") String description,
-                                                     @RequestHeader("Authorization") String token) throws IOException {
-        jwtService.validateToken(token);
+    public ResponseEntity<RentalsModel> createRental(
+            @RequestParam("name") String name,
+            @RequestParam("surface") Long surface,
+            @RequestParam("price") Long price,
+            @RequestPart("picture") MultipartFile picture,
+            @RequestParam("description") String description,
+            @RequestHeader("Authorization") String token) throws IOException {
         return new ResponseEntity<>(rentalsService.createRental(name, surface, price, description, token, picture), HttpStatus.CREATED);
     }
 
-    @PutMapping("/rental/{id}")
-    public ResponseEntity<RentalsModel> updateRental(@PathVariable Long id, @RequestParam Long ownerId, @RequestBody RentalsModel rental, @RequestHeader("Authorization") String token) {
+    @PutMapping("/rentals/{id}")
+    public ResponseEntity<RentalsModel> updateRental(
+            @PathVariable("id") Long id,
+            @RequestParam("name") String name,
+            @RequestParam("surface") Long surface,
+            @RequestParam("price") Long price,
+            @RequestParam("description") String description,
+            @RequestHeader("Authorization") String token) throws IOException {    
         jwtService.validateToken(token);
-        return new ResponseEntity<>(rentalsService.updateRental(id, ownerId, rental), HttpStatus.OK);
+        return new ResponseEntity<>(rentalsService.updateRental(id, name, surface, price, description, token), HttpStatus.OK);
+
     }
 }
