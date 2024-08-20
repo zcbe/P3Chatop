@@ -55,6 +55,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
     export SPRING_DATASOURCE_PASSWORD=your_datasource_password
     export SPRING_DATASOURCE_URL=your_datasource_url
     export SPRING_DATASOURCE_USERNAME=your_datasource_username
+    
     ```
 
    ### On Windows (PowerShell):

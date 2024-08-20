@@ -3,6 +3,7 @@ package com.zcbe.chatop.configuration;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -23,8 +24,10 @@ import com.nimbusds.jose.jwk.source.ImmutableSecret;
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
-    private final String jwtKey = "29ea3bbd2b985a0ce37620054848c6a6b3b7cd2d3f583013d8e4ba6b744c53fc";
 
+    @Value("${jwt.key}")
+    private String jwtKey;
+    
     @Bean
     public JwtDecoder jwtDecoder() {
         SecretKeySpec secretKey = new SecretKeySpec(this.jwtKey.getBytes(), "HMACSHA256");

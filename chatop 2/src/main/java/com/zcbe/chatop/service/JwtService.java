@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 @Service
 public class JwtService {
     private final JwtEncoder jwtEncoder;
@@ -31,7 +32,6 @@ public class JwtService {
     }
 
     public String generateToken(Authentication authentication) {
-        System.out.println(authentication);
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("http://localhost:4200")
@@ -42,29 +42,35 @@ public class JwtService {
         JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
         return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
     }
+
     public void validateToken(String bearerToken) {
         try {
             if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
                 String token = bearerToken.substring(7);
-                Jwt jwt = jwtDecoder.decode(token);
+                jwtDecoder.decode(token);
             } else {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide");
             }
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide");
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide", e);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide", e);
         }
     }
+
     public String getSubjectFromToken(String bearerToken) {
         try {
             if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
                 String token = bearerToken.substring(7);
                 Jwt jwt = jwtDecoder.decode(token);
-                return (String) jwt.getClaims().get("sub");
+                return jwt.getClaims().get("sub").toString(); // Assure-toi que 'sub' est bien présent
             } else {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide");
             }
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide");
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide", e);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide", e);
         }
     }
 }
