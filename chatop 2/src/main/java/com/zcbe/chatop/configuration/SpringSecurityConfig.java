@@ -44,11 +44,12 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/resources/**",
+                                "/api/images/**",
+                                "/uploads/**",
+                                "/uploads/images",
                                 "/static/**",
                                 "/images/**",
                                 "/auth/**",
-                                "/auth/register",
-                                "/auth/login",
                                 "/swagger*/**",
                                 "/v3/api-docs",
                                 "/v3/api-docs",

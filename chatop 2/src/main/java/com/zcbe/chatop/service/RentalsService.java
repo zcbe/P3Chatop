@@ -1,6 +1,5 @@
 package com.zcbe.chatop.service;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.zcbe.chatop.dto.MessageDtoResponse;
 import com.zcbe.chatop.dto.RentalsDto;
 import com.zcbe.chatop.dto.RentalsListDto;
 import com.zcbe.chatop.model.RentalsModel;
@@ -50,6 +50,7 @@ public class RentalsService {
     private String bucketName;
 
     private S3Client s3Client;
+
     @PostConstruct
     public void init() {
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(awsAccessKeyId, awsSecretAccessKey);
@@ -73,27 +74,20 @@ public class RentalsService {
 
     public RentalsModel getRental(Long idRental) {
         return rentalsRepository.findById(idRental)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location non trouvée"));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
     }
 
-    public RentalsModel createRental(String name, Long surface, Long price, String description, String bearerToken, MultipartFile picture ) throws IOException {
- // Vérification des entrées
- System.out.println("Creating Rental with name: " + name);
- System.out.println("Bearer Token: " + bearerToken);
+    public MessageDtoResponse createRental(String name, Long surface, Long price, String description, String bearerToken, MultipartFile picture ) throws IOException {
+        System.out.println("Creating Rental with name: " + name);
+        System.out.println("Bearer Token: " + bearerToken);
+
         String userEmail = jwtService.getSubjectFromToken(bearerToken);
         UserModel user = userRepository.findByEmail(userEmail);
-    //    Path path = Paths.get("src/main/resources/public/images/" + picture.getOriginalFilename());
-//        String baseUrl = "http://localhost:8080/api/images/";
-//        byte[] bytes = picture.getBytes();
-//        Files.write(path, bytes);
-//        rental.setPicture(baseUrl + picture.getOriginalFilename());
 
-System.out.println("User found: " + user);
-
-        String fileUrl = uploadFileToS3(picture);
-        System.out.println("Uploaded file URL: " + fileUrl);
 
         RentalsModel rental = new RentalsModel();
+        //rental.setPicture(baseUrl + picture.getOriginalFilename());
+        String fileUrl = uploadFileToS3(picture);
         rental.setPicture(fileUrl);
         rental.setName(name);
         rental.setSurface(surface);
@@ -101,10 +95,13 @@ System.out.println("User found: " + user);
         rental.setDescription(description);
         rental.setOwner_id(user.getId());        
         rental.setCreated_at(new Date());
-         // Ajouter des logs
-    System.out.println("Inserting Rental: " + rental);
-        return rentalsRepository.save(rental);
-    }
+
+        System.out.println("Inserting Rental: " + rental);
+        MessageDtoResponse messageDtoResponse = new MessageDtoResponse();
+        messageDtoResponse.setMessage("Your real estate ad has been created");
+        rentalsRepository.save(rental);
+        return messageDtoResponse;    }
+
     private String uploadFileToS3(MultipartFile file) throws IOException {
         String key = "images/" + file.getOriginalFilename();
 
@@ -120,23 +117,28 @@ System.out.println("User found: " + user);
 
         String fileUrl = s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(key)).toExternalForm();
         System.out.println("Uploaded file URL: " + fileUrl);
-        return fileUrl;    }
+        return fileUrl;
+    }
 
-    public RentalsModel updateRental(Long rentalId, String name, Long surface, Long price, String description, String bearerToken) {
+    public MessageDtoResponse updateRental(Long rentalId, String name, Long surface, Long price, String description, String bearerToken) {
         RentalsModel rentalToUpdate = rentalsRepository.findById(rentalId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location non trouvée"));
+         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
 
-            String userEmail = jwtService.getSubjectFromToken(bearerToken);
-            UserModel user = userRepository.findByEmail(userEmail);
-            if (user.getId().equals(rentalToUpdate.getOwner_id())) {
-            if (name!= null) rentalToUpdate.setName(name);
+        String userEmail = jwtService.getSubjectFromToken(bearerToken);
+        UserModel user = userRepository.findByEmail(userEmail);
+        if (user.getId().equals(rentalToUpdate.getOwner_id())) {
+            if (name != null) rentalToUpdate.setName(name);
             if (surface != null) rentalToUpdate.setSurface(surface);
             if (price != null) rentalToUpdate.setPrice(price);
             if (description != null) rentalToUpdate.setDescription(description);
             rentalToUpdate.setUpdated_at(new Date());
-            return rentalsRepository.save(rentalToUpdate);
+            rentalsRepository.save(rentalToUpdate);
+            MessageDtoResponse messageDtoResponse = new MessageDtoResponse();
+            messageDtoResponse.setMessage("Your real estate ad has been updated");
+            return messageDtoResponse;
+        
         } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Seul le propriétaire peut mettre à jour l'annonce'");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Only the owner can update the listing'");
         }
     }
 }

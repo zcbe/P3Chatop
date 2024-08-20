@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +19,11 @@ import com.zcbe.chatop.dto.RentalsListDto;
 import com.zcbe.chatop.model.RentalsModel;
 import com.zcbe.chatop.service.JwtService;
 import com.zcbe.chatop.service.RentalsService;
+import com.zcbe.chatop.dto.MessageDtoResponse;
+
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 public class RentalsController {
     @Autowired
     private JwtService jwtService;
@@ -43,7 +44,7 @@ public class RentalsController {
     }
 
     @PostMapping("/rentals")
-    public ResponseEntity<RentalsModel> createRental(
+    public ResponseEntity<MessageDtoResponse> createRental(
             @RequestParam("name") String name,
             @RequestParam("surface") Long surface,
             @RequestParam("price") Long price,
@@ -54,7 +55,7 @@ public class RentalsController {
     }
 
     @PutMapping("/rentals/{id}")
-    public ResponseEntity<RentalsModel> updateRental(
+    public ResponseEntity<MessageDtoResponse> updateRental(
             @PathVariable("id") Long id,
             @RequestParam("name") String name,
             @RequestParam("surface") Long surface,
