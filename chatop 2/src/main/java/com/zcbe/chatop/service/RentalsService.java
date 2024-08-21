@@ -31,12 +31,16 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 
 @Service
 public class RentalsService {
+    
     @Autowired
     private RentalsRepository rentalsRepository;
+    
     @Autowired
     private ModelMapper modelMapper;
+    
     @Autowired
     private UserRepository userRepository;
+    
     @Autowired
     private JwtService jwtService;
 
@@ -51,15 +55,17 @@ public class RentalsService {
 
     private S3Client s3Client;
 
+    // Méthode annotée pour initialiser le client S3 après la construction du bean
     @PostConstruct
     public void init() {
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(awsAccessKeyId, awsSecretAccessKey);
         this.s3Client = S3Client.builder()
-                .region(Region.EU_WEST_3)
+                .region(Region.EU_WEST_3)  // Définit la région pour le client S3
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .build();
     }
 
+    // Méthode pour récupérer toutes les annonces de location
     public RentalsListDto getAllRentals() {
         Iterable<RentalsModel> rentalsModels = rentalsRepository.findAll();
         List<RentalsDto> rentalsDtos = new ArrayList<>();
@@ -72,38 +78,42 @@ public class RentalsService {
         return rentalsListDto;
     }
 
+    // Méthode pour récupérer une annonce spécifique par son identifiant
     public RentalsModel getRental(Long idRental) {
         return rentalsRepository.findById(idRental)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
     }
 
+    // Méthode pour créer une nouvelle annonce de location
     public MessageDtoResponse createRental(String name, Long surface, Long price, String description, String bearerToken, MultipartFile picture ) throws IOException {
         System.out.println("Creating Rental with name: " + name);
         System.out.println("Bearer Token: " + bearerToken);
 
+        // Obtient l'email de l'utilisateur à partir du token JWT
         String userEmail = jwtService.getSubjectFromToken(bearerToken);
         UserModel user = userRepository.findByEmail(userEmail);
 
-
+        // Crée un nouveau modèle de location
         RentalsModel rental = new RentalsModel();
-        //rental.setPicture(baseUrl + picture.getOriginalFilename());
-        String fileUrl = uploadFileToS3(picture);
+        String fileUrl = uploadFileToS3(picture);  // Télécharge l'image sur S3 et obtient l'URL
         rental.setPicture(fileUrl);
         rental.setName(name);
         rental.setSurface(surface);
         rental.setPrice(price);
         rental.setDescription(description);
-        rental.setOwner_id(user.getId());        
+        rental.setOwner_id(user.getId());
         rental.setCreated_at(new Date());
 
         System.out.println("Inserting Rental: " + rental);
         MessageDtoResponse messageDtoResponse = new MessageDtoResponse();
         messageDtoResponse.setMessage("Your real estate ad has been created");
         rentalsRepository.save(rental);
-        return messageDtoResponse;    }
+        return messageDtoResponse;
+    }
 
+    // Méthode pour téléverser un fichier sur AWS S3
     private String uploadFileToS3(MultipartFile file) throws IOException {
-        String key = "images/" + file.getOriginalFilename();
+        String key = "images/" + file.getOriginalFilename();  // Détermine le chemin du fichier dans le bucket
 
         try {
             s3Client.putObject(PutObjectRequest.builder()
@@ -120,12 +130,16 @@ public class RentalsService {
         return fileUrl;
     }
 
+    // Méthode pour mettre à jour une annonce de location existante
     public MessageDtoResponse updateRental(Long rentalId, String name, Long surface, Long price, String description, String bearerToken) {
         RentalsModel rentalToUpdate = rentalsRepository.findById(rentalId)
          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
 
+        // Obtient l'email de l'utilisateur à partir du token JWT
         String userEmail = jwtService.getSubjectFromToken(bearerToken);
         UserModel user = userRepository.findByEmail(userEmail);
+
+        // Vérifie si l'utilisateur est le propriétaire de la location
         if (user.getId().equals(rentalToUpdate.getOwner_id())) {
             if (name != null) rentalToUpdate.setName(name);
             if (surface != null) rentalToUpdate.setSurface(surface);

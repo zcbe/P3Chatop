@@ -21,29 +21,35 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
-@Configuration
-@EnableWebSecurity
+@Configuration  
+@EnableWebSecurity  // Active la sécurité Web dans cette application
 public class SpringSecurityConfig {
 
-    @Value("${jwt.key}")
+    @Value("${jwt.key}")  // Injecte la clé JWT depuis les propriétés de l'application, signer et verifier les tokens Jwt
     private String jwtKey;
-    
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKey = new SecretKeySpec(this.jwtKey.getBytes(), "HMACSHA256");
-        return NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
-    }
 
     @Bean
     public JwtEncoder jwtEncoder() {
+        // Crée et retourne un JwtEncoder configuré pour encoder des JWT avec la clé secrète
         return new NimbusJwtEncoder(new ImmutableSecret<>(this.jwtKey.getBytes()));
     }
+    
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        // Crée une clé secrète spécifiée pour décoder les JWT avec l'algorithme HMACSHA256
+        SecretKeySpec secretKey = new SecretKeySpec(this.jwtKey.getBytes(), "HMACSHA256");
+        // Retourne un JwtDecoder configuré avec cette clé secrète
+        return NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
+    }
+
+   
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // Configure la chaîne de filtres de sécurité
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable)  // Désactive la protection CSRF car l'application est sans état (stateless)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // Configure la gestion des sessions pour ne pas créer de session (stateless)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/resources/**",
@@ -55,20 +61,22 @@ public class SpringSecurityConfig {
                                 "/auth/**",
                                 "/swagger*/**",
                                 "/v3/api-docs",
-                                "/v3/api-docs",
                                 "/v3/api-docs/swagger-config"
-                                ).permitAll()
-                        .anyRequest().authenticated())
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-                .build();
+                                ).permitAll()  
+                        .anyRequest().authenticated())  // Exige l'authentification pour toute autre requête
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))  // Configure le serveur de ressources OAuth2 pour utiliser JWT
+                .build();  // Construit et retourne la configuration de la chaîne de filtres de sécurité
     }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
+        // Retourne un encodeur de mots de passe utilisant l'algorithme BCrypt
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public ModelMapper modelMapper() {
+        // Retourne une instance de ModelMapper, utilisée pour mapper les objets DTO et entités
         return new ModelMapper();
     }
 }

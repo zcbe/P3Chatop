@@ -55,7 +55,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
     export SPRING_DATASOURCE_PASSWORD=your_datasource_password
     export SPRING_DATASOURCE_URL=your_datasource_url
     export SPRING_DATASOURCE_USERNAME=your_datasource_username
-    
     ```
 
    ### On Windows (PowerShell):
@@ -86,4 +85,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
     ```sh
     mvn spring-boot:run
     ```
+
+7. Ouvrez votre navigateur et accédez à  http://localhost:3001/api/swagger-ui/index.html  pour afficher l'interface utilisateur de Swagger.
+
 
