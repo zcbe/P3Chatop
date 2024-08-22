@@ -1,6 +1,7 @@
 package com.zcbe.chatop.service;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,4 +50,10 @@ public class UserService {
     public boolean checkPassword(UserLoginDto userLoginDto, UserModel user) {
         return passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword());
     }
+
+    public UserModel getUserById(Long id) {
+        Optional<UserModel> userOptional = userRepository.findById(id);
+        return userOptional.orElse(null);
+    }
+    
 }
