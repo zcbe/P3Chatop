@@ -41,7 +41,7 @@ public class UserService {
     public UserModel createUser(UserCreateDto userDto) {
         UserModel user = modelMapper.map(userDto, UserModel.class); // Convertit le DTO en modèle
         user.setPassword(passwordEncoder.encode(userDto.getPassword())); // Hache le mot de passe
-        user.setCreatedAt(new Date()); // Définit la date de création
+        user.setCreated_at(new Date()); // Définit la date de création
         return userRepository.save(user); // Sauvegarde le nouvel utilisateur dans la base de données
     }
 

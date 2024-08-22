@@ -3,9 +3,6 @@ package com.zcbe.chatop.service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -15,7 +12,6 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,58 +20,56 @@ public class JwtService {
     private final JwtEncoder jwtEncoder; 
     private final JwtDecoder jwtDecoder; 
 
-    // Constructeur pour initialiser JwtEncoder et JwtDecoder
-    public JwtService(JwtEncoder jwtEncoder) {
+    // Inject JwtEncoder and JwtDecoder via the constructor
+    public JwtService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder) {
         this.jwtEncoder = jwtEncoder;
-        String secret = "29ea3bbd2b985a0ce37620054848c6a6b3b7cd2d3f583013d8e4ba6b744c53fc"; // Clé secrète pour signer le JWT, normalement injectée depuis un fichier de configuration
-        SecretKey secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");  // Création d'une clé secrète pour HMAC SHA-256
-        this.jwtDecoder = NimbusJwtDecoder.withSecretKey(secretKey).build();  // Initialisation du décodeur avec la clé secrète
+        this.jwtDecoder = jwtDecoder;
     }
 
-    // Génère un JWT à partir des informations d'authentification
+    // Generate a JWT from authentication information
     public String generateToken(Authentication authentication) {
-        Instant now = Instant.now();  // Obtient le moment actuel
+        Instant now = Instant.now();  // Get current time
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("http://localhost:4200")  // Définit l'émetteur du JWT
-                .issuedAt(now)  // Définit la date de création du JWT
-                .expiresAt(now.plus(1, ChronoUnit.DAYS))  // Définit la date d'expiration du JWT (1 jour après la création)
-                .subject(authentication.getPrincipal().toString())  // Définit le sujet du JWT (identifiant de l'utilisateur)
+                .issuer("http://localhost:4200")  // Define the issuer of the JWT
+                .issuedAt(now)  // Define the creation date of the JWT
+                .expiresAt(now.plus(1, ChronoUnit.DAYS))  // Define the expiration date of the JWT (1 day after creation)
+                .subject(authentication.getPrincipal().toString())  // Define the subject of the JWT (user identifier)
                 .build();
         JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
-        // Encode le JWT avec l'en-tête et les revendications spécifiés
-        return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();  // Retourne le jeton encodé sous forme de chaîne
+        // Encode the JWT with the specified header and claims
+        return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();  // Return the encoded token as a string
     }
 
-    // Valide un JWT en le décodant
+    // Validate a JWT by decoding it
     public void validateToken(String bearerToken) {
         try {
             if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-                String token = bearerToken.substring(7);  // Extrait le token sans le préfixe "Bearer "
-                jwtDecoder.decode(token);  // Décode le token
+                String token = bearerToken.substring(7);  // Extract the token without the "Bearer " prefix
+                jwtDecoder.decode(token);  // Decode the token
             } else {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide");  // Lance une exception si le token est invalide
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");  // Throw an exception if the token is invalid
             }
         } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide", e);  // Lance une exception en cas d'argument illégal
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Throw an exception for illegal argument
         } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide", e);  // Lance une exception en cas d'erreur d'exécution
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Throw an exception for runtime error
         }
     }
 
-    // Récupère le sujet (subject) du JWT
+    // Get the subject (subject) from the JWT
     public String getSubjectFromToken(String bearerToken) {
         try {
             if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-                String token = bearerToken.substring(7);  // Extrait le token sans le préfixe "Bearer "
-                Jwt jwt = jwtDecoder.decode(token);  // Décode le token
-                return jwt.getClaims().get("sub").toString();  // Récupère le sujet (identifiant de l'utilisateur) des revendications du JWT
+                String token = bearerToken.substring(7);  // Extract the token without the "Bearer " prefix
+                Jwt jwt = jwtDecoder.decode(token);  // Decode the token
+                return jwt.getClaims().get("sub").toString();  // Get the subject (user identifier) from the JWT claims
             } else {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide");  // Lance une exception si le token est invalide
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");  // Throw an exception if the token is invalid
             }
         } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide", e);  // Lance une exception en cas d'argument illégal
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Throw an exception for illegal argument
         } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token invalide", e);  // Lance une exception en cas d'erreur d'exécution
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Throw an exception for runtime error
         }
     }
 }
