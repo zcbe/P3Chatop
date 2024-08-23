@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:4200")
+
 public class LoginController {
 
     // Déclaration des services utilisés par le contrôleur

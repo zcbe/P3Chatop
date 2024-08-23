@@ -22,7 +22,7 @@ import com.zcbe.chatop.service.JwtService;
 import com.zcbe.chatop.service.RentalsService;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:4200")
+
 public class RentalsController {
 
     // Injection des services nécessaires : JwtService pour la gestion des tokens JWT et RentalsService pour la gestion des locations
