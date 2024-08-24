@@ -55,7 +55,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
     export SPRING_DATASOURCE_PASSWORD=your_datasource_password
     export SPRING_DATASOURCE_URL=your_datasource_url
     export SPRING_DATASOURCE_USERNAME=your_datasource_username
+    export JWT_KEY=your_jwt_key
     ```
+
 
    ### On Windows (PowerShell):
 
@@ -66,6 +68,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
     setx SPRING_DATASOURCE_PASSWORD "your_datasource_password"
     setx SPRING_DATASOURCE_URL "your_datasource_url"
     setx SPRING_DATASOURCE_USERNAME "your_datasource_username"
+    setx JWT_KEY "your_jwt_key"
     ```
 
 4. Clone the repository:

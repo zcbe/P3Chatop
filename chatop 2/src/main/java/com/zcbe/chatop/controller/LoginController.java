@@ -92,7 +92,7 @@ public class LoginController {
             // Retourne une réponse 200 OK avec le token
             return ResponseEntity.ok(tokenDto);
         } else {
-            // Retourne une réponse 409 Conflict si un utilisateur avec le même email existe déjà
+            // Retourne une réponse 400 Conflict si un utilisateur avec le même email existe déjà
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Un utilisateur avec cet email existe déjà");
         }
     }
@@ -115,6 +115,7 @@ public class LoginController {
          if (user != null) {
              return ResponseEntity.ok(user);
          } else {
+            // Retourne une réponse 401 utilisateur non trouvé
              return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur non trouvé");
          }
      }

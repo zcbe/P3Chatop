@@ -20,56 +20,56 @@ public class JwtService {
     private final JwtEncoder jwtEncoder; 
     private final JwtDecoder jwtDecoder; 
 
-    // Inject JwtEncoder and JwtDecoder via the constructor
+    // Injecter JwtEncoder et JwtDecoder via le constructeur
     public JwtService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder) {
         this.jwtEncoder = jwtEncoder;
         this.jwtDecoder = jwtDecoder;
     }
 
-    // Generate a JWT from authentication information
+    // Générer un JWT à partir des informations d'authentification
     public String generateToken(Authentication authentication) {
-        Instant now = Instant.now();  // Get current time
+        Instant now = Instant.now();  // Obtenir l'heure actuelle
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("http://localhost:4200")  // Define the issuer of the JWT
-                .issuedAt(now)  // Define the creation date of the JWT
-                .expiresAt(now.plus(1, ChronoUnit.DAYS))  // Define the expiration date of the JWT (1 day after creation)
-                .subject(authentication.getPrincipal().toString())  // Define the subject of the JWT (user identifier)
+                .issuer("http://localhost:4200")  // Définir l'émetteur du JWT
+                .issuedAt(now)  // Définir la date de création du JWT
+                .expiresAt(now.plus(1, ChronoUnit.DAYS))  // Définir la date d'expiration du JWT (1 jour après la création)
+                .subject(authentication.getPrincipal().toString())  // Définir le sujet du JWT (identifiant de l'utilisateur)
                 .build();
         JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
-        // Encode the JWT with the specified header and claims
-        return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();  // Return the encoded token as a string
+        // Encoder le JWT avec l'en-tête et les revendications spécifiés
+        return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();  // Retourner le token encodé sous forme de chaîne
     }
 
-    // Validate a JWT by decoding it
+    // Valider un JWT en le décodant
     public void validateToken(String bearerToken) {
         try {
             if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-                String token = bearerToken.substring(7);  // Extract the token without the "Bearer " prefix
-                jwtDecoder.decode(token);  // Decode the token
+                String token = bearerToken.substring(7);  // Extraire le token sans le préfixe "Bearer "
+                jwtDecoder.decode(token);  // Décoder le token
             } else {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");  // Throw an exception if the token is invalid
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");  // Lever une exception si le token est invalide
             }
         } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Throw an exception for illegal argument
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Lever une exception pour argument illégal
         } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Throw an exception for runtime error
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Lever une exception pour erreur d'exécution
         }
     }
 
-    // Get the subject (subject) from the JWT
+    // Obtenir le sujet (subject) à partir du JWT
     public String getSubjectFromToken(String bearerToken) {
         try {
             if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-                String token = bearerToken.substring(7);  // Extract the token without the "Bearer " prefix
-                Jwt jwt = jwtDecoder.decode(token);  // Decode the token
-                return jwt.getClaims().get("sub").toString();  // Get the subject (user identifier) from the JWT claims
+                String token = bearerToken.substring(7);  // Extraire le token sans le préfixe "Bearer "
+                Jwt jwt = jwtDecoder.decode(token);  // Décoder le token
+                return jwt.getClaims().get("sub").toString();  // Obtenir le sujet (identifiant de l'utilisateur) à partir des revendications du JWT
             } else {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");  // Throw an exception if the token is invalid
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");  // Lever une exception si le token est invalide
             }
         } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Throw an exception for illegal argument
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Lever une exception pour argument illégal
         } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Throw an exception for runtime error
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);  // Lever une exception pour erreur d'exécution
         }
     }
 }
